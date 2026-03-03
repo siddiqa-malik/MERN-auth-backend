@@ -1,51 +1,24 @@
-// const express = require("express");
-// const mongoose = require("mongoose");
-// const dotenv = require("dotenv");
-// const cors = require("cors");
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
 
-// dotenv.config();
-
-// const authRoutes = require("./routes/authRoutes");
-// const userRoutes = require("./routes/userRoutes");
-
-// const app = express();
-
-// /* 🔥 CORS FIX */
-// app.use(cors({
-//   origin: "*",
-//   methods: ["GET","POST","PUT","DELETE"],
-//   allowedHeaders: ["Content-Type","Authorization"]
-// }));
-
-// app.use(express.json());
-
-// app.use("/api/auth", authRoutes);
-// app.use("/api/users", userRoutes);
-
-// mongoose.connect(process.env.MONGO_URI)
-// .then(() => console.log("MongoDB Connected"))
-// .catch(err => console.log(err));
-
-// export default app;
-
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const cors = require("cors");
+import authRoutes from "./routes/authRoutes.js";   // note the .js
+import userRoutes from "./routes/userRoutes.js";
+import { createClient } from "redis";
 
 dotenv.config();
-
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
 /* 🔥 CORS FIX */
-app.use(cors({
-  origin: "*",
-  methods: ["GET","POST","PUT","DELETE"],
-  allowedHeaders: ["Content-Type","Authorization"]
-}));
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.use(express.json());
 
@@ -53,10 +26,27 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
-// MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err));
+// Redis client
+const redisClient = createClient({ url: process.env.REDIS_URL });
+redisClient.on("error", (err) => console.log("Redis Client Error", err));
 
-// CommonJS export for Vercel
-module.exports = app;
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB Connected");
+
+    await redisClient.connect();
+    console.log("Redis Connected");
+
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+}
+
+startServer();
+
+// export the app for Vercel / testing
+export default app;

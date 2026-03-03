@@ -1,6 +1,6 @@
-const express = require("express");
-const User = require("../models/User");
-const authMiddleware = require("../middleware/authMiddleware");
+import express from "express";
+import User from "../models/User.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 console.log('userRoutes loaded, module.exports before:', module.exports);
 
@@ -15,4 +15,4 @@ router.get("/", authMiddleware, async (req, res) => {
 
 console.log('userRoutes about to export, router:', router);
 
-module.exports = router;
+export default router;
