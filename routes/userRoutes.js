@@ -2,9 +2,9 @@ import express from "express";
 import User from "../models/User.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
-console.log('userRoutes loaded, module.exports before:', module.exports);
+console.log('userRoutes loaded');
 
-console.log('authMiddleware type:', typeof authMiddleware, 'authMiddleware:', authMiddleware);
+console.log('authMiddleware type:', typeof authMiddleware);
 
 const router = express.Router();
 

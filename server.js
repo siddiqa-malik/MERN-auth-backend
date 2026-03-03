@@ -7,8 +7,8 @@ import authRoutes from "./routes/authRoutes.js";   // note the .js
 import userRoutes from "./routes/userRoutes.js";
 import { createClient } from "redis";
 
-dotenv.config();
-
+  dotenv.config();
+  
 const app = express();
 
 /* 🔥 CORS FIX */
