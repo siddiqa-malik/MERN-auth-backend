@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import authRoutes from "./routes/authRoutes.js";   // note the .js
+import authRoutes from "./routes/authRoutes.js";   
 import userRoutes from "./routes/userRoutes.js";
 import { createClient } from "redis";
 
@@ -11,7 +11,7 @@ import { createClient } from "redis";
   
 const app = express();
 
-/* 🔥 CORS FIX */
+
 app.use(
   cors({
     origin: "*",
@@ -48,5 +48,5 @@ async function startServer() {
 
 startServer();
 
-// export the app for Vercel / testing
+
 export default app;
