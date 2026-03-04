@@ -44,6 +44,14 @@ async function startServer() {
     console.error(err);
     process.exit(1);
   }
+
+
+  app.get("/redis-test", async (req, res) => {
+  await redisClient.set("projectName", "MERN Auth");
+  const value = await redisClient.get("projectName");
+
+  res.json({ message: value });
+});
 }
 
 startServer();
